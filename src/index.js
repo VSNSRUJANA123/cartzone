@@ -4,11 +4,20 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AppProvider } from "./context/productContext";
-const root = ReactDOM.createRoot(document.getElementById("root"));
+import { FilterProvider } from "./context/filterContext";
+import { CartProvider } from "./context/cartContext";
 
+const root = ReactDOM.createRoot(document.getElementById("root"));
+const domain = process.env.REACT_APP_AUTH_DOMAIN;
+const clientId = process.env.REACT_APP_CLIENT_ID;
+console.log(domain);
 root.render(
   <AppProvider>
-    <App />
+    <FilterProvider>
+      <CartProvider>
+        <App />
+      </CartProvider>
+    </FilterProvider>
   </AppProvider>
 );
 

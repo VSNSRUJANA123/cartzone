@@ -1,7 +1,23 @@
 import React from "react";
+import { useState } from "react";
+import { useCartContext } from "../context/cartContext";
+import { FaCheck, FaMinus, FaPlus } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { Button } from "../styles/Button";
+
 import styled from "styled-components";
 const AddToCart = ({ product }) => {
+  const { addToCart } = useCartContext();
   const { id, colors, stock } = product;
+  let [color, setColors] = useState(colors[0]);
+  let [amount, setAmount] = useState(1);
+
+  const setDecrease = () => {
+    amount > 1 ? setAmount(amount - 1) : setAmount(1);
+  };
+  const setIncrease = () => {
+    amount < stock ? setAmount(amount + 1) : setAmount(stock);
+  };
   return (
     <Wrapper>
       <div className="colors">
@@ -12,14 +28,30 @@ const AddToCart = ({ product }) => {
               <button
                 key={id}
                 style={{ backgroundColor: curColor }}
-                className="btnStyle active"
+                className={color === curColor ? "btnStyle active" : "btnStyle"}
+                onClick={() => setColors(curColor)}
               >
-                {curColor}
+                {color === curColor ? <FaCheck className="checkStyle" /> : null}
               </button>
             );
           })}
         </p>
       </div>
+      {/* add to cart */}
+      <div className="cart-button">
+        <div className="amount-toggle">
+          <button onClick={() => setDecrease()}>
+            <FaMinus />
+          </button>
+          <div className="amount-style">{amount}</div>
+          <button onClick={() => setIncrease()}>
+            <FaPlus />
+          </button>
+        </div>
+      </div>
+      <NavLink to="/cart" onClick={() => addToCart(id, color, amount, product)}>
+        <Button className="btn">Add to cart</Button>
+      </NavLink>
     </Wrapper>
   );
 };
